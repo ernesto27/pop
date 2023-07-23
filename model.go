@@ -13,6 +13,7 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/pop/emails"
 	"github.com/resendlabs/resend-go"
 	"golang.org/x/exp/constraints"
 )
@@ -56,9 +57,12 @@ type Model struct {
 	quitting       bool
 	abort          bool
 	err            error
+
+	// Service mail
+	serviceEmail emails.ServiceEmail
 }
 
-func NewModel(defaults resend.SendEmailRequest) Model {
+func NewModel(defaults resend.SendEmailRequest, sm emails.ServiceEmail) Model {
 	from := textinput.New()
 	from.Prompt = "From "
 	from.Placeholder = "me@example.com"
@@ -155,6 +159,7 @@ func NewModel(defaults resend.SendEmailRequest) Model {
 		help:           help.New(),
 		keymap:         DefaultKeybinds(),
 		loadingSpinner: loadingSpinner,
+		serviceEmail:   sm,
 	}
 
 	m.focusActiveInput()

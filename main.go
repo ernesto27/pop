@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/pop/emails"
 	mcobra "github.com/muesli/mango-cobra"
 	"github.com/muesli/roff"
 	"github.com/resendlabs/resend-go"
@@ -53,8 +54,10 @@ var rootCmd = &cobra.Command{
 			body += "\n\n" + signature
 		}
 
+		serviceEmail := emails.NewResend(os.Getenv(RESEND_API_KEY), unsafe)
+
 		if len(to) > 0 && from != "" && subject != "" && body != "" && !preview {
-			err := sendEmail(to, from, subject, body, attachments)
+			err := serviceEmail.SendEmail(to, from, subject, body, attachments)
 			if err != nil {
 				cmd.SilenceUsage = true
 				cmd.SilenceErrors = true
@@ -70,8 +73,8 @@ var rootCmd = &cobra.Command{
 			To:          to,
 			Subject:     subject,
 			Text:        body,
-			Attachments: makeAttachments(attachments),
-		}))
+			Attachments: serviceEmail.MakeAttachments(attachments),
+		}, serviceEmail))
 		m, err := p.Run()
 		if err != nil {
 			return err
