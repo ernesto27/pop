@@ -45,13 +45,22 @@ func (r Resend) SendEmail(to []string, from, subject, body string, paths []strin
 		_ = goldmark.Convert([]byte(body), html)
 	}
 
+	ap := r.MakeAttachments(paths)
+	at := []resend.Attachment{}
+	for _, a := range ap {
+		at = append(at, resend.Attachment{
+			Content:  a.Content,
+			Filename: a.Filename,
+		})
+	}
+
 	request := &resend.SendEmailRequest{
-		From:    from,
-		To:      to,
-		Subject: subject,
-		Html:    html.String(),
-		Text:    body,
-		//Attachments: r.MakeAttachments(paths),
+		From:        from,
+		To:          to,
+		Subject:     subject,
+		Html:        html.String(),
+		Text:        body,
+		Attachments: at,
 	}
 
 	_, err := client.Emails.Send(request)

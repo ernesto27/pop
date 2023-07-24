@@ -68,11 +68,14 @@ var rootCmd = &cobra.Command{
 			return nil
 		}
 
+		at := serviceEmail.MakeAttachments(attachments)
+
 		p := tea.NewProgram(NewModel(types.EmailParams{
-			From:    from,
-			To:      to,
-			Subject: subject,
-			Body:    body,
+			From:        from,
+			To:          to,
+			Subject:     subject,
+			Body:        body,
+			Attachments: at,
 		}, serviceEmail))
 
 		m, err := p.Run()
