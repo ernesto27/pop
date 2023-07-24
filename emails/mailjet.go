@@ -11,19 +11,19 @@ import (
 	. "github.com/mailjet/mailjet-apiv3-go"
 )
 
-type Malijet struct {
+type Mailjet struct {
 	apiKeyPublic  string
 	apiKeyPrivate string
 }
 
-func NewMalijet() Malijet {
-	return Malijet{
-		apiKeyPublic:  "",
-		apiKeyPrivate: "",
+func NewMailjet(apiKeyPublic string, apiKeyPrivate string) Mailjet {
+	return Mailjet{
+		apiKeyPublic:  apiKeyPublic,
+		apiKeyPrivate: apiKeyPrivate,
 	}
 }
 
-func (m Malijet) SendEmail(to []string, from, subject, body string, paths []string) error {
+func (m Mailjet) SendEmail(to []string, from, subject, body string, paths []string) error {
 	if len(to) == 0 {
 		return errors.New("to is empty")
 	}
@@ -61,12 +61,12 @@ func (m Malijet) SendEmail(to []string, from, subject, body string, paths []stri
 	messages := mailjet.MessagesV31{Info: messagesInfo}
 	_, err := mailjetClient.SendMailV31(&messages)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	return nil
 }
 
-func (m Malijet) MakeAttachments(paths []string) []types.Attachment {
+func (m Mailjet) MakeAttachments(paths []string) []types.Attachment {
 	if len(paths) == 0 {
 		return nil
 	}
