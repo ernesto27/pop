@@ -3,10 +3,7 @@ package emails
 import (
 	"encoding/base64"
 	"errors"
-	"os"
-	"path/filepath"
 
-	"github.com/charmbracelet/pop/types"
 	"github.com/mailjet/mailjet-apiv3-go"
 	. "github.com/mailjet/mailjet-apiv3-go"
 )
@@ -46,7 +43,7 @@ func (m Mailjet) SendEmail(to []string, from, subject, body string, paths []stri
 
 	attachment := []mailjet.AttachmentV31{}
 	if len(paths) > 0 {
-		ap := m.MakeAttachments(paths)
+		ap := MakeAttachments(paths)
 		for _, p := range ap {
 			attachment = append(attachment, mailjet.AttachmentV31{
 				ContentType:   "text/plain",
@@ -65,26 +62,4 @@ func (m Mailjet) SendEmail(to []string, from, subject, body string, paths []stri
 	}
 
 	return nil
-}
-
-func (m Mailjet) MakeAttachments(paths []string) []types.Attachment {
-	if len(paths) == 0 {
-		return nil
-	}
-
-	attachments := make([]types.Attachment, len(paths))
-	for i, a := range paths {
-		f, err := os.ReadFile(a)
-
-		if err != nil {
-			continue
-		}
-
-		attachments[i] = types.Attachment{
-			Content:  string(f),
-			Filename: filepath.Base(a),
-		}
-	}
-
-	return attachments
 }

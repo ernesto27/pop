@@ -70,7 +70,7 @@ var rootCmd = &cobra.Command{
 			return nil
 		}
 
-		at := serviceEmail.MakeAttachments(attachments)
+		at := emails.MakeAttachments(attachments)
 
 		p := tea.NewProgram(NewModel(types.EmailParams{
 			From:        from,

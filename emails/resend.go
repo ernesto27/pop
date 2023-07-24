@@ -2,10 +2,7 @@ package emails
 
 import (
 	"bytes"
-	"os"
-	"path/filepath"
 
-	"github.com/charmbracelet/pop/types"
 	"github.com/resendlabs/resend-go"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -45,7 +42,7 @@ func (r Resend) SendEmail(to []string, from, subject, body string, paths []strin
 		_ = goldmark.Convert([]byte(body), html)
 	}
 
-	ap := r.MakeAttachments(paths)
+	ap := MakeAttachments(paths)
 	at := []resend.Attachment{}
 	for _, a := range ap {
 		at = append(at, resend.Attachment{
@@ -69,24 +66,4 @@ func (r Resend) SendEmail(to []string, from, subject, body string, paths []strin
 	}
 
 	return nil
-}
-
-func (r Resend) MakeAttachments(paths []string) []types.Attachment {
-	if len(paths) == 0 {
-		return nil
-	}
-
-	attachments := make([]types.Attachment, len(paths))
-	for i, a := range paths {
-		f, err := os.ReadFile(a)
-		if err != nil {
-			continue
-		}
-		attachments[i] = types.Attachment{
-			Content:  string(f),
-			Filename: filepath.Base(a),
-		}
-	}
-
-	return attachments
 }
