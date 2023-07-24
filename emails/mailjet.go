@@ -44,18 +44,18 @@ func (m Mailjet) SendEmail(to []string, from, subject, body string, paths []stri
 		},
 	}
 
-	attachment := &mailjet.AttachmentV31{}
+	attachment := []mailjet.AttachmentV31{}
 	if len(paths) > 0 {
 		ap := m.MakeAttachments(paths)
 		for _, p := range ap {
-			// TODO - get content type from file
-			attachment.ContentType = "text/plain"
-			attachment.Filename = p.Filename
-			attachment.Base64Content = base64.StdEncoding.EncodeToString([]byte(p.Content))
+			attachment = append(attachment, mailjet.AttachmentV31{
+				ContentType:   "text/plain",
+				Filename:      p.Filename,
+				Base64Content: base64.StdEncoding.EncodeToString([]byte(p.Content)),
+			})
 		}
 
-		// TODO - support multiple attachments
-		messagesInfo[0].Attachments = &mailjet.AttachmentsV31{*attachment}
+		messagesInfo[0].Attachments = (*AttachmentsV31)(&attachment)
 	}
 
 	messages := mailjet.MessagesV31{Info: messagesInfo}
@@ -63,6 +63,7 @@ func (m Mailjet) SendEmail(to []string, from, subject, body string, paths []stri
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -74,6 +75,7 @@ func (m Mailjet) MakeAttachments(paths []string) []types.Attachment {
 	attachments := make([]types.Attachment, len(paths))
 	for i, a := range paths {
 		f, err := os.ReadFile(a)
+
 		if err != nil {
 			continue
 		}
