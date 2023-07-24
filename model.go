@@ -14,7 +14,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/pop/emails"
-	"github.com/resendlabs/resend-go"
+	"github.com/charmbracelet/pop/types"
 	"golang.org/x/exp/constraints"
 )
 
@@ -62,7 +62,7 @@ type Model struct {
 	serviceEmail emails.ServiceEmail
 }
 
-func NewModel(defaults resend.SendEmailRequest, sm emails.ServiceEmail) Model {
+func NewModel(defaults types.EmailParams, sm emails.ServiceEmail) Model {
 	from := textinput.New()
 	from.Prompt = "From "
 	from.Placeholder = "me@example.com"

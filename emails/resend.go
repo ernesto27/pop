@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/charmbracelet/pop/types"
 	"github.com/resendlabs/resend-go"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -45,12 +46,12 @@ func (r Resend) SendEmail(to []string, from, subject, body string, paths []strin
 	}
 
 	request := &resend.SendEmailRequest{
-		From:        from,
-		To:          to,
-		Subject:     subject,
-		Html:        html.String() + "dfsfsfdsfs",
-		Text:        body,
-		Attachments: r.MakeAttachments(paths),
+		From:    from,
+		To:      to,
+		Subject: subject,
+		Html:    html.String(),
+		Text:    body,
+		//Attachments: r.MakeAttachments(paths),
 	}
 
 	_, err := client.Emails.Send(request)
@@ -61,18 +62,18 @@ func (r Resend) SendEmail(to []string, from, subject, body string, paths []strin
 	return nil
 }
 
-func (r Resend) MakeAttachments(paths []string) []resend.Attachment {
+func (r Resend) MakeAttachments(paths []string) []types.Attachment {
 	if len(paths) == 0 {
 		return nil
 	}
 
-	attachments := make([]resend.Attachment, len(paths))
+	attachments := make([]types.Attachment, len(paths))
 	for i, a := range paths {
 		f, err := os.ReadFile(a)
 		if err != nil {
 			continue
 		}
-		attachments[i] = resend.Attachment{
+		attachments[i] = types.Attachment{
 			Content:  string(f),
 			Filename: filepath.Base(a),
 		}

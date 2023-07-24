@@ -9,9 +9,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/pop/emails"
+	"github.com/charmbracelet/pop/types"
 	mcobra "github.com/muesli/mango-cobra"
 	"github.com/muesli/roff"
-	"github.com/resendlabs/resend-go"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +54,7 @@ var rootCmd = &cobra.Command{
 			body += "\n\n" + signature
 		}
 
-		serviceEmail := emails.NewResend(os.Getenv(RESEND_API_KEY), unsafe)
+		serviceEmail := getMailService(os.Getenv("POP_SERVICE_EMAIL"))
 
 		if len(to) > 0 && from != "" && subject != "" && body != "" && !preview {
 			err := serviceEmail.SendEmail(to, from, subject, body, attachments)
@@ -68,13 +68,13 @@ var rootCmd = &cobra.Command{
 			return nil
 		}
 
-		p := tea.NewProgram(NewModel(resend.SendEmailRequest{
-			From:        from,
-			To:          to,
-			Subject:     subject,
-			Text:        body,
-			Attachments: serviceEmail.MakeAttachments(attachments),
+		p := tea.NewProgram(NewModel(types.EmailParams{
+			From:    from,
+			To:      to,
+			Subject: subject,
+			Body:    body,
 		}, serviceEmail))
+
 		m, err := p.Run()
 		if err != nil {
 			return err
@@ -175,6 +175,15 @@ func init() {
 		}
 	}
 	rootCmd.Version = Version
+}
+
+func getMailService(name string) emails.ServiceEmail {
+	switch name {
+	case "malijet":
+		return emails.NewMalijet()
+	default:
+		return emails.NewResend(os.Getenv(RESEND_API_KEY), unsafe)
+	}
 }
 
 func main() {
