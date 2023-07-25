@@ -39,7 +39,7 @@ var (
 
 // emailSummary returns a summary of the email that was sent. It is used when
 // the user has sent an email successfully.
-func emailSummary(to []string, subject string) string {
+func emailSummary(to []string, subject string, serviceEmail string) string {
 	var s strings.Builder
 	s.WriteString("\n  Email ")
 	s.WriteString(activeTextStyle.Render("\"" + subject + "\""))
@@ -49,6 +49,9 @@ func emailSummary(to []string, subject string) string {
 			s.WriteString(", ")
 		}
 		s.WriteString(linkStyle.Render(t))
+	}
+	if serviceEmail != "" {
+		s.WriteString(" using " + serviceEmail)
 	}
 	s.WriteString("\n\n")
 

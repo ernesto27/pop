@@ -71,7 +71,7 @@ var rootCmd = &cobra.Command{
 				fmt.Println(errorStyle.Render(err.Error()))
 				return err
 			}
-			fmt.Print(emailSummary(to, subject))
+			fmt.Print(emailSummary(to, subject, os.Getenv("POP_SERVICE_EMAIL")))
 			return nil
 		}
 
@@ -91,7 +91,7 @@ var rootCmd = &cobra.Command{
 		}
 		mm := m.(Model)
 		if !mm.abort {
-			fmt.Print(emailSummary(strings.Split(mm.To.Value(), TO_SEPARATOR), mm.Subject.Value()))
+			fmt.Print(emailSummary(strings.Split(mm.To.Value(), TO_SEPARATOR), mm.Subject.Value(), os.Getenv("POP_SERVICE_EMAIL")))
 		}
 		return nil
 	},
