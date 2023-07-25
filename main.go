@@ -61,7 +61,11 @@ var rootCmd = &cobra.Command{
 			body += "\n\n" + signature
 		}
 
-		serviceEmail := getMailService(os.Getenv("POP_SERVICE_EMAIL"))
+		serviceEmail, err := getMailService(os.Getenv("POP_SERVICE_EMAIL"))
+		if err != nil {
+			fmt.Println("SMTP error:", err)
+			os.Exit(1)
+		}
 
 		if len(to) > 0 && from != "" && subject != "" && body != "" && !preview {
 			err := serviceEmail.SendEmail(to, from, subject, body, attachments)
@@ -187,19 +191,14 @@ func init() {
 	rootCmd.Version = Version
 }
 
-func getMailService(name string) emails.ServiceEmail {
+func getMailService(name string) (emails.ServiceEmail, error) {
 	switch name {
 	case "mailjet":
-		return emails.NewMailjet(os.Getenv(MAILJET_API_KEY_PUBLIC), os.Getenv(MAILJET_API_KEY_PRIVATE))
+		return emails.NewMailjet(os.Getenv(MAILJET_API_KEY_PUBLIC), os.Getenv(MAILJET_API_KEY_PRIVATE)), nil
 	case "smtp":
-		smtp, err := emails.NewSmtp(os.Getenv(SMTP_HOST), os.Getenv(SMTP_PORT), os.Getenv(SMTP_USERNAME), os.Getenv(SMTP_PASSWORD))
-		if err != nil {
-			fmt.Println("SMTP error:", err)
-			os.Exit(1)
-		}
-		return smtp
+		return emails.NewSmtp(os.Getenv(SMTP_HOST), os.Getenv(SMTP_PORT), os.Getenv(SMTP_USERNAME), os.Getenv(SMTP_PASSWORD))
 	default:
-		return emails.NewResend(os.Getenv(RESEND_API_KEY), unsafe)
+		return emails.NewResend(os.Getenv(RESEND_API_KEY), unsafe), nil
 	}
 }
 
