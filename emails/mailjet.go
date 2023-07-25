@@ -4,8 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 
-	"github.com/mailjet/mailjet-apiv3-go"
-	. "github.com/mailjet/mailjet-apiv3-go"
+	mailjet "github.com/mailjet/mailjet-apiv3-go"
 )
 
 type Mailjet struct {
@@ -25,7 +24,7 @@ func (m Mailjet) SendEmail(to []string, from, subject, body string, paths []stri
 		return errors.New("to is empty")
 	}
 
-	mailjetClient := NewMailjetClient(m.apiKeyPublic, m.apiKeyPrivate)
+	mailjetClient := mailjet.NewMailjetClient(m.apiKeyPublic, m.apiKeyPrivate)
 	messagesInfo := []mailjet.InfoMessagesV31{
 		{
 			From: &mailjet.RecipientV31{
@@ -52,7 +51,7 @@ func (m Mailjet) SendEmail(to []string, from, subject, body string, paths []stri
 			})
 		}
 
-		messagesInfo[0].Attachments = (*AttachmentsV31)(&attachment)
+		messagesInfo[0].Attachments = (*mailjet.AttachmentsV31)(&attachment)
 	}
 
 	messages := mailjet.MessagesV31{Info: messagesInfo}
