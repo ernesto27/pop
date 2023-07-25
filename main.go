@@ -16,11 +16,16 @@ import (
 )
 
 const RESEND_API_KEY = "RESEND_API_KEY"
-const MAILJET_API_KEY_PUBLIC = "MAILJET_API_KEY_PUBLIC"
-const MAILJET_API_KEY_PRIVATE = "MAILJET_API_KEY_PRIVATE"
 const UNSAFE_HTML = "POP_UNSAFE_HTML"
 const POP_FROM = "POP_FROM"
 const POP_SIGNATURE = "POP_SIGNATURE"
+const POP_SERVICE_EMAIL = "POP_SERVICE_EMAIL"
+const MAILJET_API_KEY_PUBLIC = "MAILJET_API_KEY_PUBLIC"
+const MAILJET_API_KEY_PRIVATE = "MAILJET_API_KEY_PRIVATE"
+const SMTP_HOST = "SMTP_HOST"
+const SMTP_PORT = "SMTP_PORT"
+const SMTP_USERNAME = "SMTP_USERNAME"
+const SMTP_PASSWORD = "SMTP_PASSWORD"
 
 var (
 	from        string
@@ -186,6 +191,13 @@ func getMailService(name string) emails.ServiceEmail {
 	switch name {
 	case "mailjet":
 		return emails.NewMailjet(os.Getenv(MAILJET_API_KEY_PUBLIC), os.Getenv(MAILJET_API_KEY_PRIVATE))
+	case "smtp":
+		smtp, err := emails.NewSmtp(os.Getenv(SMTP_HOST), os.Getenv(SMTP_PORT), os.Getenv(SMTP_USERNAME), os.Getenv(SMTP_PASSWORD))
+		if err != nil {
+			fmt.Println("SMTP error:", err)
+			os.Exit(1)
+		}
+		return smtp
 	default:
 		return emails.NewResend(os.Getenv(RESEND_API_KEY), unsafe)
 	}

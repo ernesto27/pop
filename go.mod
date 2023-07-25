@@ -6,12 +6,14 @@ require (
 	github.com/charmbracelet/bubbles v0.16.2-0.20230711184233-0bdcc628fb8f
 	github.com/charmbracelet/bubbletea v0.24.3-0.20230710130425-c4c83ba757f8
 	github.com/charmbracelet/lipgloss v0.7.1
+	github.com/mailjet/mailjet-apiv3-go v0.0.0-20201009050126-c24bc15a9394
 	github.com/muesli/mango-cobra v1.2.0
 	github.com/muesli/roff v0.1.0
 	github.com/resendlabs/resend-go v1.7.0
 	github.com/spf13/cobra v1.7.0
 	github.com/yuin/goldmark v1.5.4
 	golang.org/x/exp v0.0.0-20230711153332-06a737ee72cb
+	gopkg.in/mail.v2 v2.3.1
 )
 
 require (
@@ -21,7 +23,6 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
-	github.com/mailjet/mailjet-apiv3-go v0.0.0-20201009050126-c24bc15a9394 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
@@ -38,4 +39,5 @@ require (
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/term v0.10.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )
