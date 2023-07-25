@@ -51,6 +51,33 @@ export POP_FROM=pop@charm.sh
 export POP_SIGNATURE="Sent with [Pop](https://github.com/charmbracelet/pop)!"
 ```
 
+#### You can also use another email provider (by default uses resend).
+
+#### MAILJET setup
+
+Grab api keys here: https://app.mailjet.com/
+
+Set environment variables
+
+```bash
+export POP_SERVICE_EMAIL=mailjet
+export MAILJET_API_KEY_PUBLIC=yourkey
+export MAILJET_API_KEY_PRIVATE=yourkey
+```
+
+#### SMTP setup
+
+Set environment variables
+
+```bash 
+export POP_SERVICE_EMAIL=smtp
+export POP_SMTP_HOST=smtp.host
+export POP_SMTP_PORT=587
+export POP_SMTP_USERNAME=yourusername
+export POP_SMTP_PASSWORD=yourpassword
+```
+
+
 ## Installation
 
 Use a package manager:
